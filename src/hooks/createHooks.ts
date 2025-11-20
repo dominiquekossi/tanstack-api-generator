@@ -5,8 +5,8 @@ import {
   type UseQueryResult,
   type UseMutationOptions,
   type UseMutationResult,
-  type QueryClient,
 } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/query-core";
 import type {
   APIConfig,
   EndpointConfig,

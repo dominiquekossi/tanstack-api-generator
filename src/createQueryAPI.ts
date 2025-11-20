@@ -1,4 +1,4 @@
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/query-core";
 import type { APIConfig, FetchConfig, EndpointConfig } from "./types";
 import { createFetcher } from "./fetch/createFetcher";
 import { createKeyFactory } from "./keys/createKeyFactory";
