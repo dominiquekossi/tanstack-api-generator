@@ -1,6 +1,6 @@
 # Migration Guide
 
-This guide helps you migrate from manual TanStack Query setup to @devtools/tanstack-api-generator.
+This guide helps you migrate from manual TanStack Query setup to tanstack-api-generator.
 
 ## From Manual TanStack Query
 
@@ -78,11 +78,11 @@ function UserList() {
 }
 ```
 
-### After: With @devtools/tanstack-api-generator
+### After: With tanstack-api-generator
 
 ```typescript
 // api.ts
-import { createQueryAPI } from "@devtools/tanstack-api-generator";
+import { createQueryAPI } from "tanstack-api-generator";
 import { z } from "zod";
 
 const UserSchema = z.object({
@@ -198,7 +198,7 @@ function UserProfile({ userId }: { userId: string }) {
 ### Step 1: Install Dependencies
 
 ```bash
-npm install @devtools/tanstack-api-generator @tanstack/react-query
+npm install tanstack-api-generator @tanstack/react-query
 npm install zod  # Optional, for validation
 ```
 
@@ -449,7 +449,7 @@ const api = createQueryAPI({
 
 ## Summary
 
-Migration to @devtools/tanstack-api-generator typically:
+Migration to tanstack-api-generator typically:
 
 - Reduces code by 80-90%
 - Improves type safety

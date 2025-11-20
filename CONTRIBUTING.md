@@ -1,4 +1,4 @@
-# Contributing to @devtools/tanstack-api-generator
+# Contributing to tanstack-api-generator
 
 Thank you for your interest in contributing! This document provides guidelines and instructions for contributing to this project.
 

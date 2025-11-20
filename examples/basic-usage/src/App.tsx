@@ -15,7 +15,7 @@ function App() {
   return (
     <div className="app">
       <header>
-        <h1>@devtools/tanstack-api-generator Example</h1>
+        <h1>tanstack-api-generator Example</h1>
         <p>Demonstrating automatic hook generation with TanStack Query</p>
       </header>
 

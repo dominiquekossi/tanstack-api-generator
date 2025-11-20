@@ -1,5 +1,5 @@
 {
-  "name": "@devtools/tanstack-api-generator",
+  "name": "tanstack-api-generator",
   "version": "1.0.0",
   "description": "Automatic code generation library for TanStack Query v5+ that eliminates manual boilerplate",
   "main": "dist/index.js",

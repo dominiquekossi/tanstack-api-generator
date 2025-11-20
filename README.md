@@ -1,4 +1,4 @@
-# @devtools/tanstack-api-generator
+# tanstack-api-generator
 
 Automatic code generation library for TanStack Query v5+ that eliminates manual boilerplate. Generate fully-typed React Query hooks, query keys, fetchers, and invalidation helpers from a simple typed configuration object.
 
@@ -15,11 +15,11 @@ Automatic code generation library for TanStack Query v5+ that eliminates manual 
 ## Installation
 
 ```bash
-npm install @devtools/tanstack-api-generator @tanstack/react-query
+npm install tanstack-api-generator @tanstack/react-query
 # or
-yarn add @devtools/tanstack-api-generator @tanstack/react-query
+yarn add tanstack-api-generator @tanstack/react-query
 # or
-pnpm add @devtools/tanstack-api-generator @tanstack/react-query
+pnpm add tanstack-api-generator @tanstack/react-query
 ```
 
 Optional: Install Zod for runtime validation

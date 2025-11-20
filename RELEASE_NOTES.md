@@ -2,12 +2,12 @@
 
 ## 🎉 First Stable Release
 
-We're excited to announce the first stable release of **@devtools/tanstack-api-generator** - a zero-boilerplate code generation library for TanStack Query v5+!
+We're excited to announce the first stable release of **tanstack-api-generator** - a zero-boilerplate code generation library for TanStack Query v5+!
 
 ## 📦 Installation
 
 ```bash
-npm install @devtools/tanstack-api-generator @tanstack/react-query
+npm install tanstack-api-generator @tanstack/react-query
 ```
 
 ## ✨ What's Included
@@ -39,7 +39,7 @@ npm install @devtools/tanstack-api-generator @tanstack/react-query
 ## 🚀 Quick Start
 
 ```typescript
-import { createQueryAPI } from "@devtools/tanstack-api-generator";
+import { createQueryAPI } from "tanstack-api-generator";
 
 const api = createQueryAPI(
   {
@@ -112,7 +112,7 @@ export function useCreateUser() {
 }
 ```
 
-### After (With @devtools/tanstack-api-generator)
+### After (With tanstack-api-generator)
 
 ```typescript
 const api = createQueryAPI(
@@ -170,7 +170,7 @@ MIT © [Dominique Houessou](https://github.com/kossidom)
 **Ready to eliminate boilerplate?** Install now:
 
 ```bash
-npm install @devtools/tanstack-api-generator @tanstack/react-query
+npm install tanstack-api-generator @tanstack/react-query
 ```
 
 Check out the [full documentation](./README.md) to get started!

@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🎉 Initial Release
 
-First stable release of @devtools/tanstack-api-generator - a zero-boilerplate code generation library for TanStack Query v5+.
+First stable release of tanstack-api-generator - a zero-boilerplate code generation library for TanStack Query v5+.
 
 ### ✨ Features
 
@@ -73,7 +73,7 @@ First stable release of @devtools/tanstack-api-generator - a zero-boilerplate co
 ### 📝 Example Usage
 
 ```typescript
-import { createQueryAPI } from "@devtools/tanstack-api-generator";
+import { createQueryAPI } from "tanstack-api-generator";
 
 const api = createQueryAPI(
   {
