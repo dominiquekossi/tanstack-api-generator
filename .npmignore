@@ -1,0 +1,42 @@
+# Source files
+src/
+tests/
+examples/
+
+# Config files
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+vitest.config.ts
+
+# Spec files
+.kiro/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules/
+
+# Build artifacts (keep dist/)
+*.tsbuildinfo
+
+# Documentation (keep in package)
+# README.md - keep
+# LICENSE - keep
+# CHANGELOG.md - keep
+# CONTRIBUTING.md - keep
+# docs/ - keep
