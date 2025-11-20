@@ -1,5 +1,5 @@
 {
-  "name": "@tanstack-auto/query-api",
+  "name": "@devtools/tanstack-api-generator",
   "version": "1.0.0",
   "description": "Automatic code generation library for TanStack Query v5+ that eliminates manual boilerplate",
   "main": "dist/index.js",
@@ -44,12 +44,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kossidom/tanstack-auto-query-api.git"
+    "url": "git+https://github.com/kossidom/tanstack-api-generator.git"
   },
   "bugs": {
-    "url": "https://github.com/kossidom/tanstack-auto-query-api/issues"
+    "url": "https://github.com/kossidom/tanstack-api-generator/issues"
   },
-  "homepage": "https://github.com/kossidom/tanstack-auto-query-api#readme",
+  "homepage": "https://github.com/kossidom/tanstack-api-generator#readme",
   "peerDependencies": {
     "@tanstack/react-query": "^5.0.0",
     "react": "^18.0.0"

@@ -2,7 +2,7 @@
 
 ## ✅ Verification Complete
 
-The `@tanstack-auto/query-api` library provides **complete access** to all TanStack Query properties and methods through the generated hooks.
+The `@devtools/tanstack-api-generator` library provides **complete access** to all TanStack Query properties and methods through the generated hooks.
 
 ## Implementation Details
 

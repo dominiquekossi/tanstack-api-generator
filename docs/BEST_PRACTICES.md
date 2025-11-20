@@ -1,6 +1,6 @@
 # Best Practices
 
-This guide covers best practices for using @tanstack-auto/query-api effectively in your applications.
+This guide covers best practices for using @devtools/tanstack-api-generator effectively in your applications.
 
 ## Configuration
 
@@ -51,7 +51,7 @@ Keep your API configuration in a separate file:
 
 ```typescript
 // api.ts
-import { createQueryAPI } from "@tanstack-auto/query-api";
+import { createQueryAPI } from "@devtools/tanstack-api-generator";
 import { z } from "zod";
 
 const UserSchema = z.object({

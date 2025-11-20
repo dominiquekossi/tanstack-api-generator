@@ -1,4 +1,4 @@
-# @tanstack-auto/query-api
+# @devtools/tanstack-api-generator
 
 Automatic code generation library for TanStack Query v5+ that eliminates manual boilerplate. Generate fully-typed React Query hooks, query keys, fetchers, and invalidation helpers from a simple typed configuration object.
 
@@ -15,11 +15,11 @@ Automatic code generation library for TanStack Query v5+ that eliminates manual 
 ## Installation
 
 ```bash
-npm install @tanstack-auto/query-api @tanstack/react-query
+npm install @devtools/tanstack-api-generator @tanstack/react-query
 # or
-yarn add @tanstack-auto/query-api @tanstack/react-query
+yarn add @devtools/tanstack-api-generator @tanstack/react-query
 # or
-pnpm add @tanstack-auto/query-api @tanstack/react-query
+pnpm add @devtools/tanstack-api-generator @tanstack/react-query
 ```
 
 Optional: Install Zod for runtime validation
@@ -757,9 +757,9 @@ See [CHANGELOG.md](./CHANGELOG.md) for a list of changes in each version.
 
 ## Support
 
-- 🐛 [Report a bug](https://github.com/kossidom/tanstack-auto-query-api/issues/new?labels=bug)
-- 💡 [Request a feature](https://github.com/kossidom/tanstack-auto-query-api/issues/new?labels=enhancement)
-- 💬 [Ask a question](https://github.com/kossidom/tanstack-auto-query-api/discussions)
+- 🐛 [Report a bug](https://github.com/kossidom/tanstack-api-generator/issues/new?labels=bug)
+- 💡 [Request a feature](https://github.com/kossidom/tanstack-api-generator/issues/new?labels=enhancement)
+- 💬 [Ask a question](https://github.com/kossidom/tanstack-api-generator/discussions)
 
 ## Acknowledgments
 

@@ -1,4 +1,4 @@
-import { createQueryAPI } from "@tanstack-auto/query-api";
+import { createQueryAPI } from "@devtools/tanstack-api-generator";
 import { z } from "zod";
 
 // Define Zod schemas for type safety

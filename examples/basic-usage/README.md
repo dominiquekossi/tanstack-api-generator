@@ -1,6 +1,6 @@
-# @tanstack-auto/query-api Example
+# @devtools/tanstack-api-generator Example
 
-This example demonstrates **all major features** of `@tanstack-auto/query-api` with a comprehensive React application.
+This example demonstrates **all major features** of `@devtools/tanstack-api-generator` with a comprehensive React application.
 
 ## Features Demonstrated
 
@@ -187,4 +187,4 @@ This example uses [JSONPlaceholder](https://jsonplaceholder.typicode.com/), a fr
 
 - [TanStack Query Documentation](https://tanstack.com/query/latest)
 - [Zod Documentation](https://zod.dev/)
-- [@tanstack-auto/query-api README](../../README.md)
+- [@devtools/tanstack-api-generator README](../../README.md)

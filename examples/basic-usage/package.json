@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-auto-query-api-example",
+  "name": "tanstack-api-generator-example",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tanstack-auto/query-api": "file:../..",
+    "@devtools/tanstack-api-generator": "file:../..",
     "@tanstack/react-query": "^5.59.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
