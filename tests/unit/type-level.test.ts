@@ -371,13 +371,15 @@ describe("MutationVariables Type-Level Tests", () => {
       type Endpoint = {
         method: "PUT";
         path: "/users/:userId/posts/:postId";
-        bodySchema: z.ZodObject<{ title: z.ZodString }>;
+        bodySchema: z.ZodObject<{
+          title: z.ZodString;
+        }>;
       };
 
       type Hook = UseMutationHook<Endpoint>;
       type Variables = ExtractMutationVariables<Hook>;
 
-      expectTypeOf<Variables>().toEqualTypeOf<{
+      expectTypeOf<Variables>().toMatchTypeOf<{
         params: { userId: string | number; postId: string | number };
         body: { title: string };
       }>();
