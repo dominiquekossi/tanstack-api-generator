@@ -37,14 +37,34 @@ export function createFetcher(config: FetchConfig = {}): FetcherFunction {
     afterResponse,
   } = config;
 
-  return async function fetcher<TResponse = unknown, TBody = unknown>(
+  return async function fetcher<
+    TResponse = unknown,
+    TBody = unknown,
+    TQuery = unknown
+  >(
     path: string,
-    options: FetchOptions<TBody> = { method: "GET" }
+    options: FetchOptions<TBody, TQuery> = { method: "GET" }
   ): Promise<TResponse> {
-    const { method = "GET", body, params, signal, schema } = options;
+    const {
+      method = "GET",
+      body,
+      params,
+      query,
+      signal,
+      schema,
+      bodySchema,
+    } = options;
 
     // Replace path parameters with actual values
     let finalPath = replacePath(path, params);
+
+    // Add query parameters to the path
+    if (query) {
+      const queryString = buildQueryString(query);
+      if (queryString) {
+        finalPath += (finalPath.includes("?") ? "&" : "?") + queryString;
+      }
+    }
 
     // Construct full URL
     const url = baseURL + finalPath;
@@ -59,11 +79,22 @@ export function createFetcher(config: FetchConfig = {}): FetcherFunction {
       signal,
     };
 
-    // Add body for mutation methods
+    // Validate and add body for mutation methods
     if (
       body !== undefined &&
       (method === "POST" || method === "PUT" || method === "PATCH")
     ) {
+      // Validate body against bodySchema if provided
+      if (bodySchema) {
+        const result = bodySchema.safeParse(body);
+        if (!result.success) {
+          const validationError: ValidationError = {
+            type: "validation",
+            errors: result.error,
+          };
+          throw validationError;
+        }
+      }
       requestInit.body = JSON.stringify(body);
     }
 
@@ -182,6 +213,48 @@ function extractParamNames(path: string): string[] {
     return [];
   }
   return matches.map((match) => match.slice(1)); // Remove the leading ':'
+}
+
+/**
+ * Build URL query string from query parameters object
+ *
+ * @param query - Query parameters object
+ * @returns URL-encoded query string (without leading '?')
+ *
+ * @example
+ * buildQueryString({ page: 1, search: "test" }) // "page=1&search=test"
+ * buildQueryString({ tags: ["a", "b"] }) // "tags=a&tags=b"
+ * buildQueryString({ name: "John Doe" }) // "name=John%20Doe"
+ */
+function buildQueryString(query: unknown): string {
+  if (!query || typeof query !== "object") {
+    return "";
+  }
+
+  const params = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(query)) {
+    if (value === undefined || value === null) {
+      continue;
+    }
+
+    if (Array.isArray(value)) {
+      // Handle arrays by adding multiple entries with the same key
+      value.forEach((item) => {
+        if (item !== undefined && item !== null) {
+          params.append(key, String(item));
+        }
+      });
+    } else if (typeof value === "object") {
+      // Handle nested objects by JSON stringifying them
+      params.append(key, JSON.stringify(value));
+    } else {
+      // Handle primitive values
+      params.append(key, String(value));
+    }
+  }
+
+  return params.toString();
 }
 
 /**

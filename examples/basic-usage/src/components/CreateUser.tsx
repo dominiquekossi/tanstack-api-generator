@@ -7,13 +7,10 @@ export function CreateUser() {
   const [username, setUsername] = useState("");
 
   // POST/PUT/PATCH/DELETE requests become useMutation hooks
+  // ✅ NEW: Body is now fully typed from bodySchema
   const createUser = api.users.create.useMutation({
-    onSuccess: (data: {
-      id: number;
-      name: string;
-      email: string;
-      username: string;
-    }) => {
+    onSuccess: (data) => {
+      // ✅ data is fully typed as User
       console.log("User created:", data);
       alert(`User created successfully! ID: ${data.id}`);
       // Clear form
@@ -32,11 +29,12 @@ export function CreateUser() {
 
     // Mutations automatically invalidate related queries
     // This will refresh the user list after creation
+    // ✅ NEW: Body is fully typed with autocompletion
     createUser.mutate({
       body: {
-        name,
-        email,
-        username,
+        name, // ✅ Typed as string
+        email, // ✅ Typed as string (email format)
+        username, // ✅ Typed as string
       },
     });
   };

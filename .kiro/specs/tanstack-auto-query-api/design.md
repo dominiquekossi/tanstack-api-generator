@@ -2,7 +2,7 @@
 
 ## Overview
 
-The @tanstack-auto/query-api package is a TypeScript-first code generation library that transforms declarative API configurations into fully-typed TanStack Query hooks and utilities. The system uses advanced TypeScript features (template literal types, conditional types, and mapped types) to provide complete type inference from configuration to generated hooks. The architecture follows a functional composition pattern where small, focused utilities combine to create the final API object.
+The tanstack-api-generator package is a TypeScript-first code generation library that transforms declarative API configurations into fully-typed TanStack Query hooks and utilities. The system uses advanced TypeScript features (template literal types, conditional types, and mapped types) to provide complete type inference from configuration to generated hooks. The architecture follows a functional composition pattern where small, focused utilities combine to create the final API object.
 
 ## Architecture
 
@@ -388,7 +388,7 @@ type ValidationError = {
 ### Package Structure
 
 ```
-@tanstack-auto/query-api/
+tanstack-api-generator/
 ├── src/
 │   ├── index.ts                 # Main export
 │   ├── createQueryAPI.ts        # Factory function

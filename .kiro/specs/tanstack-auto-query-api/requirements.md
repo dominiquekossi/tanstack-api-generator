@@ -2,11 +2,11 @@
 
 ## Introduction
 
-The @tanstack-auto/query-api package is an automatic code generation library that eliminates manual boilerplate when working with TanStack Query v5+. The system generates fully-typed React Query hooks, query keys, fetchers, and invalidation helpers from a simple typed configuration object, reducing development time and ensuring consistency across API integrations.
+The tanstack-api-generator package is an automatic code generation library that eliminates manual boilerplate when working with TanStack Query v5+. The system generates fully-typed React Query hooks, query keys, fetchers, and invalidation helpers from a simple typed configuration object, reducing development time and ensuring consistency across API integrations.
 
 ## Glossary
 
-- **QueryAPI System**: The complete @tanstack-auto/query-api package that generates TanStack Query hooks and utilities
+- **QueryAPI System**: The complete tanstack-api-generator package that generates TanStack Query hooks and utilities
 - **API Configuration**: A typed object defining REST endpoints with methods, paths, and parameters
 - **Hook Generator**: The component that creates useQuery and useMutation hooks based on HTTP methods
 - **Query Key Factory**: The component that generates deterministic, nested query keys following TanStack Query v5 standards

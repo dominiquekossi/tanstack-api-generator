@@ -237,6 +237,46 @@ function validateEndpoint(endpoint: any, path: string): void {
       );
     }
   }
+
+  // Validate bodySchema if provided
+  if ("bodySchema" in endpoint && endpoint.bodySchema !== undefined) {
+    // Check that bodySchema is a valid Zod schema
+    if (
+      typeof endpoint.bodySchema !== "object" ||
+      endpoint.bodySchema === null ||
+      typeof endpoint.bodySchema.parse !== "function"
+    ) {
+      throw new Error(
+        `Invalid endpoint configuration at "${path}": "bodySchema" must be a Zod schema object`
+      );
+    }
+
+    // Check that bodySchema is only used with POST, PUT, or PATCH methods
+    const methodsWithBody = ["POST", "PUT", "PATCH"];
+    if (!methodsWithBody.includes(endpoint.method)) {
+      throw new Error(
+        `Invalid endpoint configuration at "${path}": "bodySchema" is only allowed for POST, PUT, and PATCH methods (got "${endpoint.method}"). ` +
+          `Request bodies are not supported for ${endpoint.method} requests. ` +
+          `Remove the "bodySchema" property or change the method to one of: ${methodsWithBody.join(
+            ", "
+          )}`
+      );
+    }
+  }
+
+  // Validate querySchema if provided
+  if ("querySchema" in endpoint && endpoint.querySchema !== undefined) {
+    // Check that querySchema is a valid Zod schema
+    if (
+      typeof endpoint.querySchema !== "object" ||
+      endpoint.querySchema === null ||
+      typeof endpoint.querySchema.parse !== "function"
+    ) {
+      throw new Error(
+        `Invalid endpoint configuration at "${path}": "querySchema" must be a Zod schema object`
+      );
+    }
+  }
 }
 
 /**

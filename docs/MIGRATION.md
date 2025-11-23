@@ -1,4 +1,4 @@
-# Migration Guide
+﻿# Migration Guide
 
 This guide helps you migrate from manual TanStack Query setup to tanstack-api-generator.
 
@@ -207,7 +207,7 @@ npm install zod  # Optional, for validation
 Create a new `api.ts` file:
 
 ```typescript
-import { createQueryAPI } from "@tanstack-auto/query-api";
+import { createQueryAPI } from "tanstack-api-generator";
 
 export const api = createQueryAPI(
   {
@@ -440,6 +440,364 @@ const api = createQueryAPI({
   },
 } as const);
 ```
+
+## Migrating to bodySchema and querySchema (Type Safety Enhancement)
+
+If you're already using tanstack-api-generator, you can enhance your type safety by adding `bodySchema` and `querySchema` to your endpoints.
+
+### Why Migrate?
+
+- ✅ **Full type safety** for request bodies and query parameters
+- ✅ **IDE autocompletion** for all request data
+- ✅ **Compile-time errors** for invalid data
+- ✅ **Runtime validation** with Zod schemas
+- ✅ **100% backward compatible** - migrate incrementally
+
+### Step 1: Define Request Schemas
+
+Create Zod schemas for your request bodies and query parameters:
+
+```typescript
+import { z } from "zod";
+
+// Request body schemas
+const CreateUserSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  age: z.number().min(0),
+});
+
+const UpdateUserSchema = z.object({
+  name: z.string().min(1).optional(),
+  email: z.string().email().optional(),
+  age: z.number().min(0).optional(),
+});
+
+// Query parameter schemas
+const UserFilterSchema = z.object({
+  name: z.string().optional(),
+  role: z.enum(["admin", "user", "guest"]).optional(),
+  page: z.number().min(1).optional(),
+  limit: z.number().min(1).max(100).optional(),
+});
+```
+
+### Step 2: Add bodySchema to POST/PUT/PATCH Endpoints
+
+**Before:**
+
+```typescript
+const api = createQueryAPI({
+  users: {
+    create: {
+      method: "POST",
+      path: "/users",
+      schema: UserSchema, // Only response is typed
+    },
+    update: {
+      method: "PUT",
+      path: "/users/:id",
+      schema: UserSchema, // Only response is typed
+    },
+  },
+} as const);
+
+// Usage - body is untyped (unknown)
+createUser.mutate({
+  body: {
+    name: "John",
+    email: "john@example.com",
+    invalidField: "test", // ⚠️ No error!
+  },
+});
+```
+
+**After:**
+
+```typescript
+const api = createQueryAPI({
+  users: {
+    create: {
+      method: "POST",
+      path: "/users",
+      bodySchema: CreateUserSchema, // ✅ Request body is typed
+      schema: UserSchema, // ✅ Response is typed
+    },
+    update: {
+      method: "PUT",
+      path: "/users/:id",
+      bodySchema: UpdateUserSchema, // ✅ Request body is typed
+      schema: UserSchema, // ✅ Response is typed
+    },
+  },
+} as const);
+
+// Usage - body is fully typed
+createUser.mutate({
+  body: {
+    name: "John", // ✅ Autocompleted
+    email: "john@example.com", // ✅ Autocompleted
+    age: 30, // ✅ Autocompleted
+    // invalidField: "test",  // ❌ TypeScript error!
+  },
+});
+```
+
+### Step 3: Add querySchema to GET Endpoints
+
+**Before:**
+
+```typescript
+const api = createQueryAPI({
+  users: {
+    list: {
+      method: "GET",
+      path: "/users",
+      schema: z.array(UserSchema), // Only response is typed
+    },
+  },
+} as const);
+
+// Can't pass typed query parameters
+const { data } = api.users.list.useQuery();
+```
+
+**After:**
+
+```typescript
+const api = createQueryAPI({
+  users: {
+    list: {
+      method: "GET",
+      path: "/users",
+      querySchema: UserFilterSchema, // ✅ Query params are typed
+      schema: z.array(UserSchema), // ✅ Response is typed
+    },
+  },
+} as const);
+
+// Query params are fully typed
+const { data } = api.users.list.useQuery({
+  name: "John", // ✅ Autocompleted
+  role: "admin", // ✅ Autocompleted, enum validated
+  page: 1, // ✅ Autocompleted
+  limit: 10, // ✅ Autocompleted
+  // invalid: true,  // ❌ TypeScript error!
+});
+```
+
+### Step 4: Update Component Usage
+
+**Before:**
+
+```typescript
+function CreateUser() {
+  const createUser = api.users.create.useMutation();
+
+  const handleSubmit = (data: any) => {
+    // Manual type casting needed
+    createUser.mutate({
+      body: data as CreateUser,
+    });
+  };
+}
+```
+
+**After:**
+
+```typescript
+function CreateUser() {
+  const createUser = api.users.create.useMutation();
+
+  const handleSubmit = (data: CreateUser) => {
+    // No casting needed - fully typed!
+    createUser.mutate({
+      body: data, // ✅ Type-safe
+    });
+  };
+}
+```
+
+### Step 5: Handle Path Params + Body/Query
+
+For endpoints with both path parameters and body/query:
+
+**Mutations with path params and body:**
+
+```typescript
+// Endpoint configuration
+update: {
+  method: "PUT",
+  path: "/users/:id",
+  bodySchema: UpdateUserSchema,
+  schema: UserSchema,
+}
+
+// Usage
+updateUser.mutate({
+  params: { id: "123" },  // ✅ Typed from path
+  body: {                 // ✅ Typed from bodySchema
+    name: "Jane",
+    email: "jane@example.com",
+  },
+});
+```
+
+**Queries with path params and query:**
+
+```typescript
+// Endpoint configuration
+byUser: {
+  method: "GET",
+  path: "/users/:userId/posts",
+  querySchema: PostFilterSchema,
+  schema: z.array(PostSchema),
+}
+
+// Usage
+const { data } = api.posts.byUser.useQuery(
+  { userId: "123" },        // ✅ Typed from path
+  { status: "published" }   // ✅ Typed from querySchema
+);
+```
+
+### Migration Checklist
+
+- [ ] Install Zod if not already installed: `npm install zod`
+- [ ] Define schemas for request bodies (POST/PUT/PATCH)
+- [ ] Define schemas for query parameters (GET with filters)
+- [ ] Add `bodySchema` to POST/PUT/PATCH endpoints
+- [ ] Add `querySchema` to GET endpoints with filters
+- [ ] Update component usage to remove type casts
+- [ ] Test TypeScript compilation for errors
+- [ ] Verify runtime validation works as expected
+
+### Common Scenarios
+
+#### Scenario 1: Optional Fields
+
+```typescript
+const UpdateUserSchema = z.object({
+  name: z.string().optional(),
+  email: z.string().email().optional(),
+});
+
+// All fields are optional
+updateUser.mutate({
+  params: { id: "123" },
+  body: { name: "New Name" }, // ✅ Email is optional
+});
+```
+
+#### Scenario 2: Default Values
+
+```typescript
+const CreatePostSchema = z.object({
+  title: z.string(),
+  status: z.enum(["draft", "published"]).default("draft"),
+  tags: z.array(z.string()).default([]),
+});
+
+// Defaults are applied
+createPost.mutate({
+  body: { title: "My Post" }, // ✅ status and tags use defaults
+});
+```
+
+#### Scenario 3: Nested Objects
+
+```typescript
+const CreateUserSchema = z.object({
+  name: z.string(),
+  address: z.object({
+    street: z.string(),
+    city: z.string(),
+    zipCode: z.string(),
+  }),
+});
+
+// Nested objects are fully typed
+createUser.mutate({
+  body: {
+    name: "John",
+    address: {
+      street: "123 Main St", // ✅ Autocompleted
+      city: "New York", // ✅ Autocompleted
+      zipCode: "10001", // ✅ Autocompleted
+    },
+  },
+});
+```
+
+#### Scenario 4: Arrays
+
+```typescript
+const CreatePostSchema = z.object({
+  title: z.string(),
+  tags: z.array(z.string()),
+});
+
+// Arrays are fully typed
+createPost.mutate({
+  body: {
+    title: "My Post",
+    tags: ["typescript", "react"], // ✅ string[] typed
+  },
+});
+```
+
+### Backward Compatibility
+
+The new features are **100% backward compatible**:
+
+```typescript
+// Old code without bodySchema/querySchema still works
+const api = createQueryAPI({
+  users: {
+    create: {
+      method: "POST",
+      path: "/users",
+      schema: UserSchema, // ✅ Still works, body is 'unknown'
+    },
+  },
+} as const);
+
+// You can migrate endpoints one at a time
+const api = createQueryAPI({
+  users: {
+    create: {
+      method: "POST",
+      path: "/users",
+      bodySchema: CreateUserSchema, // ✅ New: typed body
+      schema: UserSchema,
+    },
+    update: {
+      method: "PUT",
+      path: "/users/:id",
+      schema: UserSchema, // ✅ Old: untyped body (still works)
+    },
+  },
+} as const);
+```
+
+### Benefits Summary
+
+| Feature             | Before        | After                   |
+| ------------------- | ------------- | ----------------------- |
+| Request body typing | `unknown`     | Fully typed from schema |
+| Query param typing  | Not supported | Fully typed from schema |
+| IDE autocompletion  | ❌ No         | ✅ Yes                  |
+| Compile-time errors | ❌ No         | ✅ Yes                  |
+| Runtime validation  | ❌ No         | ✅ Yes                  |
+| Type casting needed | ✅ Yes        | ❌ No                   |
+
+### Examples
+
+See the following examples for complete implementations:
+
+- **Comprehensive Example**: `examples/typed-api/` - Full demonstration of all features
+- **Basic Example**: `examples/basic-usage/` - Updated with bodySchema and querySchema
+- **Before/After Comparison**: `examples/basic-usage/BEFORE_AFTER.md`
 
 ## Need Help?
 

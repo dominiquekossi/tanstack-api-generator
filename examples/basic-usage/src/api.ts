@@ -9,11 +9,28 @@ const UserSchema = z.object({
   username: z.string(),
 });
 
+const CreateUserSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  username: z.string().min(1),
+});
+
+const UpdateUserSchema = z.object({
+  name: z.string().min(1).optional(),
+  email: z.string().email().optional(),
+  username: z.string().min(1).optional(),
+});
+
 const PostSchema = z.object({
   id: z.number(),
   title: z.string(),
   body: z.string(),
   userId: z.number(),
+});
+
+const PostFilterSchema = z.object({
+  userId: z.number().optional(),
+  _limit: z.number().optional(),
 });
 
 // Create the API with full type inference
@@ -33,11 +50,13 @@ export const api = createQueryAPI(
       create: {
         method: "POST",
         path: "/users",
+        bodySchema: CreateUserSchema, // ✅ NEW: Request body is typed
         schema: UserSchema,
       },
       update: {
         method: "PUT",
         path: "/users/:id",
+        bodySchema: UpdateUserSchema, // ✅ NEW: Request body is typed
         schema: UserSchema,
       },
       delete: {
@@ -49,6 +68,7 @@ export const api = createQueryAPI(
       list: {
         method: "GET",
         path: "/posts",
+        querySchema: PostFilterSchema, // ✅ NEW: Query params are typed
         schema: z.array(PostSchema),
       },
       get: {
@@ -80,4 +100,7 @@ export const api = createQueryAPI(
 
 // Export types inferred from schemas
 export type User = z.infer<typeof UserSchema>;
+export type CreateUser = z.infer<typeof CreateUserSchema>;
+export type UpdateUser = z.infer<typeof UpdateUserSchema>;
 export type Post = z.infer<typeof PostSchema>;
+export type PostFilter = z.infer<typeof PostFilterSchema>;

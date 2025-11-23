@@ -5,6 +5,108 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2024-11-23
+
+### 🚀 Major Release - Request/Response Typing
+
+This major release introduces comprehensive request and response typing capabilities, providing full TypeScript autocompletion for request bodies and query parameters.
+
+### ✨ New Features
+
+#### Request Body Typing
+
+- **`bodySchema` Property** - Type and validate request bodies for POST, PUT, and PATCH requests
+- **Full TypeScript Autocompletion** - IDE autocomplete for mutation body properties
+- **Compile-Time Type Checking** - Catch type errors before runtime
+- **Runtime Validation** - Ensure request data matches schema before sending
+
+```typescript
+const api = createQueryAPI({
+  users: {
+    create: {
+      method: "POST",
+      path: "/users",
+      bodySchema: z.object({
+        name: z.string(),
+        email: z.string().email(),
+      }),
+      schema: UserSchema,
+    },
+  },
+} as const);
+
+// Full autocompletion for body!
+createUser.mutate({
+  body: {
+    name: "John", // ✅ Autocompleted
+    email: "john@example.com", // ✅ Autocompleted
+  },
+});
+```
+
+#### Query Parameter Typing
+
+- **`querySchema` Property** - Type and validate query parameters for GET requests
+- **Full TypeScript Autocompletion** - IDE autocomplete for query parameters
+- **Automatic Query Key Generation** - Query params included in cache keys
+- **Type-Safe Filtering** - Build type-safe filters and pagination
+
+```typescript
+const api = createQueryAPI({
+  users: {
+    list: {
+      method: "GET",
+      path: "/users",
+      querySchema: z.object({
+        page: z.number().optional(),
+        search: z.string().optional(),
+      }),
+      schema: z.array(UserSchema),
+    },
+  },
+} as const);
+
+// Full autocompletion for query params!
+const { data } = api.users.list.useQuery({
+  page: 1, // ✅ Autocompleted
+  search: "john", // ✅ Autocompleted
+});
+```
+
+### 📚 Documentation Improvements
+
+- **New Section**: Request and Response Typing - Comprehensive guide with examples
+- **New Section**: Troubleshooting Type Errors - 8 common errors with solutions
+- **Enhanced API Reference** - Detailed documentation for `bodySchema` and `querySchema`
+- **Updated Features List** - Highlighting new autocompletion capabilities
+- **Best Practices** - 5 best practices for type safety
+
+### 🔧 Technical Improvements
+
+- Enhanced type inference for request bodies
+- Enhanced type inference for query parameters
+- Improved error messages for type mismatches
+- Better TypeScript 5.0+ compatibility
+
+### 📝 Examples
+
+- **New Example**: `examples/typed-api/` - Complete demonstration of typing features
+- Type-safe queries with query parameters
+- Type-safe mutations with body schemas
+- Type error examples and solutions
+
+### 🎯 Breaking Changes
+
+None - This release is fully backward compatible. Existing code without `bodySchema` or `querySchema` will continue to work as before.
+
+### 📦 Migration
+
+No migration needed! The new features are opt-in:
+
+- Add `bodySchema` to mutations for request body typing
+- Add `querySchema` to queries for query parameter typing
+- Existing endpoints without these schemas continue to work unchanged
+
 ## [1.0.0] - 2024-11-20
 
 ### 🎉 Initial Release
@@ -103,4 +205,5 @@ function UserList() {
 
 Built on top of the excellent [TanStack Query](https://tanstack.com/query) library.
 
+[2.0.0]: https://github.com/kossidom/tanstack-api-generator/releases/tag/v2.0.0
 [1.0.0]: https://github.com/kossidom/tanstack-api-generator/releases/tag/v1.0.0

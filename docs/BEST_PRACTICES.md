@@ -1,4 +1,4 @@
-# Best Practices
+﻿# Best Practices
 
 This guide covers best practices for using tanstack-api-generator effectively in your applications.
 

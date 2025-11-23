@@ -1,5 +1,5 @@
 /**
- * @tanstack-auto/query-api
+ * tanstack-api-generator
  *
  * Automatic code generation library for TanStack Query v5+ that eliminates manual boilerplate.
  * Generates fully-typed React Query hooks, query keys, fetchers, and invalidation helpers

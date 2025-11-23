@@ -1,6 +1,6 @@
 {
   "name": "tanstack-api-generator",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Automatic code generation library for TanStack Query v5+ that eliminates manual boilerplate",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -66,9 +66,11 @@
   "devDependencies": {
     "@tanstack/query-core": "^5.90.10",
     "@tanstack/react-query": "^5.59.0",
+    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^14.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",
+    "happy-dom": "^20.0.10",
     "msw": "^2.0.0",
     "react": "^18.2.0",
     "typescript": "^5.3.0",

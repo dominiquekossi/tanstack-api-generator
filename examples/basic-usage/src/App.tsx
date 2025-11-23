@@ -3,13 +3,14 @@ import { UserList } from "./components/UserList";
 import { UserDetail } from "./components/UserDetail";
 import { CreateUser } from "./components/CreateUser";
 import { PostList } from "./components/PostList";
+import { PostListWithFilters } from "./components/PostListWithFilters";
 import { QueryKeyDemo } from "./components/QueryKeyDemo";
 import { AdvancedQueryFeatures } from "./components/AdvancedQueryFeatures";
 
 function App() {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [view, setView] = useState<
-    "users" | "posts" | "advanced" | "properties"
+    "users" | "posts" | "filters" | "advanced" | "properties"
   >("users");
 
   return (
@@ -31,6 +32,12 @@ function App() {
           className={view === "posts" ? "active" : ""}
         >
           Posts
+        </button>
+        <button
+          onClick={() => setView("filters")}
+          className={view === "filters" ? "active" : ""}
+        >
+          Typed Filters
         </button>
         <button
           onClick={() => setView("properties")}
@@ -71,6 +78,13 @@ function App() {
             <div className="panel">
               <h2>Post List</h2>
               <PostList />
+            </div>
+          </div>
+        ) : view === "filters" ? (
+          <div className="filters-view">
+            <div className="panel">
+              <h2>Typed Query Parameters</h2>
+              <PostListWithFilters />
             </div>
           </div>
         ) : view === "properties" ? (

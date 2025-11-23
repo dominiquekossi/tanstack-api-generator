@@ -373,5 +373,206 @@ describe("Fetch Wrapper", () => {
 
       expect(result).toBe("plain text response");
     });
+
+    it("should serialize query parameters to URL", async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Headers({ "content-type": "application/json" }),
+        json: async () => [],
+      });
+
+      const fetcher = createFetcher({ baseURL: "https://api.example.com" });
+      await fetcher("/users", {
+        method: "GET",
+        query: { page: 1, limit: 10, search: "John" },
+      });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        "https://api.example.com/users?page=1&limit=10&search=John",
+        expect.any(Object)
+      );
+    });
+
+    it("should handle array query parameters", async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Headers({ "content-type": "application/json" }),
+        json: async () => [],
+      });
+
+      const fetcher = createFetcher({ baseURL: "https://api.example.com" });
+      await fetcher("/posts", {
+        method: "GET",
+        query: { tags: ["javascript", "typescript"] },
+      });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        "https://api.example.com/posts?tags=javascript&tags=typescript",
+        expect.any(Object)
+      );
+    });
+
+    it("should handle nested object query parameters", async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Headers({ "content-type": "application/json" }),
+        json: async () => [],
+      });
+
+      const fetcher = createFetcher({ baseURL: "https://api.example.com" });
+      await fetcher("/tasks", {
+        method: "GET",
+        query: { filter: { status: "active", priority: "high" } },
+      });
+
+      const expectedQuery = encodeURIComponent(
+        JSON.stringify({ status: "active", priority: "high" })
+      );
+      expect(mockFetch).toHaveBeenCalledWith(
+        `https://api.example.com/tasks?filter=${expectedQuery}`,
+        expect.any(Object)
+      );
+    });
+
+    it("should encode special characters in query parameters", async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Headers({ "content-type": "application/json" }),
+        json: async () => [],
+      });
+
+      const fetcher = createFetcher({ baseURL: "https://api.example.com" });
+      await fetcher("/users", {
+        method: "GET",
+        query: { name: "John Doe", email: "john+test@example.com" },
+      });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        "https://api.example.com/users?name=John+Doe&email=john%2Btest%40example.com",
+        expect.any(Object)
+      );
+    });
+
+    it("should skip undefined and null query parameters", async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Headers({ "content-type": "application/json" }),
+        json: async () => [],
+      });
+
+      const fetcher = createFetcher({ baseURL: "https://api.example.com" });
+      await fetcher("/users", {
+        method: "GET",
+        query: { page: 1, search: undefined, filter: null },
+      });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        "https://api.example.com/users?page=1",
+        expect.any(Object)
+      );
+    });
+
+    it("should validate request body against bodySchema", async () => {
+      const bodySchema = z.object({
+        name: z.string(),
+        email: z.string().email(),
+        age: z.number().min(0),
+      });
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 201,
+        headers: new Headers({ "content-type": "application/json" }),
+        json: async () => ({ id: 1 }),
+      });
+
+      const fetcher = createFetcher();
+      const body = { name: "John", email: "john@example.com", age: 30 };
+      const result = await fetcher("/users", {
+        method: "POST",
+        body,
+        bodySchema,
+      });
+
+      expect(result).toEqual({ id: 1 });
+      expect(mockFetch).toHaveBeenCalledWith(
+        "/users",
+        expect.objectContaining({
+          method: "POST",
+          body: JSON.stringify(body),
+        })
+      );
+    });
+
+    it("should throw ValidationError when body validation fails", async () => {
+      const bodySchema = z.object({
+        name: z.string(),
+        email: z.string().email(),
+        age: z.number().min(0),
+      });
+
+      const fetcher = createFetcher();
+      const invalidBody = { name: "John", email: "invalid-email", age: -5 };
+
+      await expect(
+        fetcher("/users", {
+          method: "POST",
+          body: invalidBody,
+          bodySchema,
+        })
+      ).rejects.toMatchObject({
+        type: "validation",
+      });
+
+      // Fetch should not be called if validation fails
+      expect(mockFetch).not.toHaveBeenCalled();
+    });
+
+    it("should skip body validation when no bodySchema provided", async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 201,
+        headers: new Headers({ "content-type": "application/json" }),
+        json: async () => ({ id: 1 }),
+      });
+
+      const fetcher = createFetcher();
+      const body = { anything: "goes", invalid: true };
+      await fetcher("/users", { method: "POST", body });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        "/users",
+        expect.objectContaining({
+          method: "POST",
+          body: JSON.stringify(body),
+        })
+      );
+    });
+
+    it("should combine path params and query params", async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Headers({ "content-type": "application/json" }),
+        json: async () => [],
+      });
+
+      const fetcher = createFetcher({ baseURL: "https://api.example.com" });
+      await fetcher("/users/:id/posts", {
+        method: "GET",
+        params: { id: 123 },
+        query: { page: 1, limit: 10 },
+      });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        "https://api.example.com/users/123/posts?page=1&limit=10",
+        expect.any(Object)
+      );
+    });
   });
 });
